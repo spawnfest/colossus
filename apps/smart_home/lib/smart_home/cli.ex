@@ -1,7 +1,8 @@
 defmodule SmartHome.CLI do
   # Echo CLI
-  def run(message, _parser, response_callback) do
-    IO.inspect("CLI run is hit")
-    response_callback.({:puts, message})
+  use Colossus
+
+  def light("on", name) do
+    IO.inspect("Turingin on: #{name}")
   end
 end
