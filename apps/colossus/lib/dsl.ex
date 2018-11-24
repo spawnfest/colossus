@@ -20,27 +20,15 @@ defmodule Colossus.DSL do
     end
   end
 
-  defmacro option(key, config) do
+  defmacro option(key, config \\ []) do
     quote do
       @option {unquote(key), unquote(config)}
     end
   end
 
-  defmacro option(key) do
-    quote do
-      @option {unquote(key)}
-    end
-  end
-
-  defmacro module_option(key, config) do
+  defmacro module_option(key, config \\ []) do
     quote do
       @module_option {unquote(key), unquote(config)}
-    end
-  end
-
-  defmacro module_option(key) do
-    quote do
-      @module_option {unquote(key)}
     end
   end
 
