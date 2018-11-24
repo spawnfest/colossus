@@ -3,7 +3,7 @@ defmodule Colossus.TestApp do
 
   desc("List things")
   def list do
-    IO.puts("listing")
+    "listing"
   end
 
   desc("Install something")
@@ -11,5 +11,9 @@ defmodule Colossus.TestApp do
   option(:sudo)
   def install(name, %{path: path}) do
     "installing #{name} to path #{path}"
+  end
+  
+  def concat(a,b,c) do
+    [a,b,c]
   end
 end

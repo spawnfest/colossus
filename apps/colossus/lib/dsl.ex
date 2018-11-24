@@ -38,25 +38,25 @@ defmodule Colossus.DSL do
         help
       end
 
-      def run([action, args], options) do
+      def run([action | args], options) do
         case Keyword.get(@actions, String.to_atom(action)) do
+          %{options: []} ->
+            apply(__MODULE__, String.to_atom(action), args)
+
           %{options: function_options} ->
             options = Colossus.Options.handle_options(function_options, options)
-            apply(__MODULE__, String.to_atom(action), [args, options])
-
-          _ ->
-            apply(__MODULE__, String.to_atom(action), args)
+            apply(__MODULE__, String.to_atom(action), [args | [options]])
         end
       end
 
-      def run([action, args]) do
+      def run([action | args]) do
         case Keyword.get(@actions, String.to_atom(action)) do
+          %{options: []} ->
+            apply(__MODULE__, String.to_atom(action), args)
+
           %{options: function_options} ->
             options = Colossus.Options.handle_options(function_options, %{})
-            apply(__MODULE__, String.to_atom(action), [args, options])
-
-          _ ->
-            apply(__MODULE__, String.to_atom(action), args)
+            apply(__MODULE__, String.to_atom(action), [args | [options]])
         end
       end
 
