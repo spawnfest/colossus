@@ -1,12 +1,7 @@
 defmodule Colossus.DSL do
   def __on_definition__(env, :def, name, _args, _guards, _body) do
     if desc = Module.get_attribute(env.module, :desc) do
-      previous_actions = Module.get_attribute(env.module, :actions)
-      if previous_actions do
-        Module.put_attribute(env.module, :actions, [{name, desc} | previous_actions])
-      else
-        Module.put_attribute(env.module, :actions, [{name, desc}])
-      end
+      Module.put_attribute(env.module, :actions, {name, desc})
       Module.delete_attribute(env.module, :desc)
     end
   end
