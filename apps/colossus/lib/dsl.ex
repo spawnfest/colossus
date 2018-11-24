@@ -38,21 +38,25 @@ defmodule Colossus.DSL do
         help
       end
 
-      def run(message, parser, output) do
-        args =
-          message # "install test --path /dev/sda"
-          |> parser.parse
-          |> IO.inspect
+      def run(message, output \\ nil) do
+        [action_name | opts]= args = OptionParser.split(message)
 
-        apply(&execute/2, args)
-        |> parser.encode
-        # |> Colossus.puts(parser)
+        aliases = get_action_config(action_name).options |> get_aliases
+
+        cmd =
+          args
+          |> OptionParser.parse!(aliases: aliases)
+          |> Tuple.to_list
+          |> Enum.reverse
+          |> IO.inspect
+          |> List.update_at(1, & Enum.into(&1, %{}))
+
+        apply(&execute/2, cmd)
       end
 
 
       def help do
-        for {action, %{description: desc}} <-
-        Enum.reject(@actions, fn {name, _} -> name == :run || name == :help end) do
+        for {action, %{description: desc}} <- not_propiretary_actions do
           {action, desc}
         end
       end
@@ -86,6 +90,21 @@ defmodule Colossus.DSL do
         end
       end
 
+      defp not_propiretary_actions do
+        propiretary_functions = [:run, :help, :execute]
+        Enum.reject(@actions, fn {name, _} -> Enum.member?(propiretary_functions, name) end)
+      end
+
+      defp get_action_config(action) do
+        Keyword.get(@actions, String.to_existing_atom(action))
+      end
+
+      defp get_aliases(func_options) do
+        Enum.map(func_options, fn {k,v} ->
+          {Keyword.get(v, :alias), k}
+        end)
+        |> Enum.filter(&(elem(&1, 1)))
+      end
     end
   end
 end

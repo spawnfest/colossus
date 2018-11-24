@@ -18,6 +18,10 @@ defmodule ColossusTest do
              Colossus.TestApp.run(["install", "test"], %{path: "/dev"})
   end
 
+  test "aliases" do
+    Colossus.TestApp.run("install -p /test")
+  end
+
   test "run without arguments" do
     assert "listing" == Colossus.TestApp.run("listing")
   end
@@ -27,6 +31,6 @@ defmodule ColossusTest do
   end
 
   test "run help" do
-    IO.inspect Colossus.TestApp.run([])
+    Colossus.TestApp.run([])
   end
 end
