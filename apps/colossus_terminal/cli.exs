@@ -1,8 +1,8 @@
 defmodule ColossusTerminal.CLI do
   def run_cli() do
     IO.gets("")
-    # MyCLI.run()
-    |> IO.write()
+    |> ColossusTerminal.TestApp.run(ColossusTerminal.Adapter, &IO.write/1)
+    # |> IO.write()
     # IO.inspect(SmartHome.StateServer.__get_state())
     run_cli()
   end
