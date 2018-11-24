@@ -3,8 +3,10 @@ defmodule Gists do
   Write with string rewriting
   """
 
-  for i <- 1..100 do
-    :timer.sleep(100)
-    IO.write("\rReady: #{i}%" |> String.pad_trailing(80))
+  def rewrite do
+    for i <- 1..100 do
+      :timer.sleep(100)
+      IO.write("\rReady: #{i}%" |> String.pad_trailing(80))
+    end
   end
 end

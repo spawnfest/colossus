@@ -1,18 +1,14 @@
 defmodule ColossusTerminal do
-  @moduledoc """
-  Documentation for ColossusTerminal.
-  """
-
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ColossusTerminal.hello()
-      :world
-
+  Main function
   """
-  def hello do
-    :world
+  def start(_, _) do
+    {:ok, spawn(&run_cli/0)}
+  end
+
+  def run_cli() do
+    input = IO.gets("")
+    IO.puts(input)
+    run_cli()
   end
 end
