@@ -48,7 +48,6 @@ defmodule Colossus.DSL do
           |> OptionParser.parse!(aliases: aliases)
           |> Tuple.to_list
           |> Enum.reverse
-          |> IO.inspect
           |> List.update_at(1, & Enum.into(&1, %{}))
 
         apply(&execute/2, cmd)
@@ -56,9 +55,11 @@ defmodule Colossus.DSL do
 
 
       def help do
-        for {action, %{description: desc}} <- not_propiretary_actions do
+        commands = for {action, %{description: desc}} <- not_propiretary_actions do
           {action, desc}
         end
+
+        @help_encoder.(commands)
       end
 
       def help(action_key) do
@@ -76,7 +77,8 @@ defmodule Colossus.DSL do
             end
           end)
 
-        {key, action.description, options_desc}
+
+        @help_command_encoder.({key, action.description, options_desc})
       end
 
       def execute([action | args], options \\ %{}) do
