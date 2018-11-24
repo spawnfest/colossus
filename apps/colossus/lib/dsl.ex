@@ -1,9 +1,11 @@
 defmodule Colossus.DSL do
-  def __on_definition__(env, :def, name, _args, _guards, _body) do
-    desc = Module.get_attribute(env.module, :desc) 
-    options = Module.get_attribute(env.module, :option) 
+  alias Colossus.Options
 
-    Module.put_attribute(env.module, :actions, {name, desc, options})
+  def __on_definition__(env, :def, name, _args, _guards, _body) do
+    desc = Module.get_attribute(env.module, :desc)
+    options = Module.get_attribute(env.module, :option)
+
+    Module.put_attribute(env.module, :actions, {name, %{description: desc, options: options}})
 
     Module.delete_attribute(env.module, :desc)
     Module.delete_attribute(env.module, :option)
@@ -30,15 +32,36 @@ defmodule Colossus.DSL do
         help
       end
 
-      def run([action | args]) do
-        apply(__MODULE__, String.to_atom(action), args)
+      def run([action, args], options) do
+        case Keyword.get(@actions, String.to_atom(action)) do
+          %{options: function_options} ->
+            options = Colossus.Options.handle_options(function_options, %{})
+            apply(__MODULE__, String.to_atom(action), [args, options])
+
+          _ ->
+            apply(__MODULE__, String.to_atom(action), args)
+        end
+      end
+
+      def run([action, args]) do
+        case Keyword.get(@actions, String.to_atom(action)) do
+          %{options: function_options} ->
+            options = Colossus.Options.handle_options(function_options, %{})
+            apply(__MODULE__, String.to_atom(action), [args, options])
+
+          _ ->
+            apply(__MODULE__, String.to_atom(action), args)
+        end
       end
 
       def help do
         IO.inspect(@actions)
-        for {action, desc, _} <- Enum.reject(@actions, fn {name, _, _} -> name == :run end) do
-          IO.puts "#{action} - #{desc}"
+
+        for {action, %{description: desc}} <-
+              Enum.reject(@actions, fn {name, _} -> name == :run end) do
+          IO.puts("#{action} - #{desc}")
         end
+
         :ok
       end
     end
