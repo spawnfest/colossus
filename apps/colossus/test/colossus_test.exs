@@ -19,10 +19,14 @@ defmodule ColossusTest do
   end
 
   test "run without arguments" do
-    assert "listing" == Colossus.TestApp.run(["list"])
+    assert "listing" == Colossus.TestApp.run("listing")
   end
 
   test "run with multiple arguments" do
     assert ["a", "b", "c"] = Colossus.TestApp.run(["concat", "a", "b", "c"])
+  end
+
+  test "run help" do
+    IO.inspect Colossus.TestApp.run([])
   end
 end

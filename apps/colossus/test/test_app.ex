@@ -13,7 +13,7 @@ defmodule Colossus.TestApp do
   option(:sudo)
 
   def install(name, %{path: path}) do
-    "installing #{name} to path #{path}"
+   Colossus.puts "installing #{name} to path #{path}"
   end
 
   def concat(a, b, c) do

@@ -38,20 +38,21 @@ defmodule Colossus.DSL do
         help
       end
 
-      def run([action | args], options \\ %{}) do
-        case Keyword.get(@actions, String.to_atom(action)) do
-          %{options: []} ->
-            apply(__MODULE__, String.to_atom(action), args)
+      def run(message, parser, output) do
+        args =
+          message # "install test --path /dev/sda"
+          |> parser.parse
+          |> IO.inspect
 
-          %{options: function_options} ->
-            options = Colossus.Options.handle_options(function_options, options, @module_option)
-            apply(__MODULE__, String.to_atom(action), [args | [options]])
-        end
+        apply(&execute/2, args)
+        |> parser.encode
+        # |> Colossus.puts(parser)
       end
+
 
       def help do
         for {action, %{description: desc}} <-
-              Enum.reject(@actions, fn {name, _} -> name == :run end) do
+        Enum.reject(@actions, fn {name, _} -> name == :run || name == :help end) do
           {action, desc}
         end
       end
@@ -73,6 +74,18 @@ defmodule Colossus.DSL do
 
         {key, action.description, options_desc}
       end
+
+      def execute([action | args], options \\ %{}) do
+        case Keyword.get(@actions, String.to_atom(action)) do
+          %{options: []} ->
+            apply(__MODULE__, String.to_atom(action), args)
+
+          %{options: function_options} ->
+            options = Colossus.Options.handle_options(function_options, options, @module_option)
+            apply(__MODULE__, String.to_atom(action), [args | [options]])
+        end
+      end
+
     end
   end
 end
