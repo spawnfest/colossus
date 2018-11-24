@@ -14,6 +14,8 @@ defmodule Colossus.Options do
           acc
         {:default, value} ->
           set_default_value(acc, key, value)
+        _ ->
+          acc
       end
     end)
   end
