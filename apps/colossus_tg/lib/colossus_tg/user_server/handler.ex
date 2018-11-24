@@ -31,11 +31,9 @@ defmodule ColossusTg.UserServer.Handler do
   end
 
   def telegram_output(user_id, {:puts, message}) do
-    IO.inspect("telegram output is hited")
-    data = %Agala.Conn{}
+    %Agala.Conn{}
     |> Agala.Conn.send_to(ColossusTg.Bot)
     |> send_message(user_id, message)
-    IO.inspect data
   end
 
 end

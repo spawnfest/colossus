@@ -6,7 +6,7 @@ defmodule Gists do
   def rewrite do
     for i <- 1..100 do
       :timer.sleep(100)
-      IO.write("\rReady: #{i}%" |> String.pad_trailing(80))
+      IO.write("\rReady: #{i}%" |> String.pad_trailing(elem(:io.columns, 1)))
     end
   end
 end
