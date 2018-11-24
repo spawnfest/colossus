@@ -5,8 +5,7 @@ defmodule Colossus.Options do
     end)
   end
 
-  def handle_option(opt, passed_options) do
-    {key, specs} = opt
+  def handle_option({key, specs} = opt, passed_options) do
     Enum.reduce(specs, passed_options, fn (spec, acc) ->
       case spec do
         {:required, true} ->
@@ -18,6 +17,10 @@ defmodule Colossus.Options do
           acc
       end
     end)
+  end
+
+  def handle_option({key}, passed_options) do
+    passed_options
   end
 
   defp validate_required({key, _value} = opt, passed_options) do

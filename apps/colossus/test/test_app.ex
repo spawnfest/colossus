@@ -9,7 +9,7 @@ defmodule Colossus.TestApp do
   desc("Install something")
   option(:path, required: true, description: "Installiation path")
   option(:sudo)
-  def install(name, opts) do
-    IO.puts("installing #{name}")
+  def install(name, %{path: path}) do
+    "installing #{name} to path #{path}"
   end
 end

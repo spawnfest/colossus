@@ -41,7 +41,7 @@ defmodule Colossus.DSL do
       def run([action, args], options) do
         case Keyword.get(@actions, String.to_atom(action)) do
           %{options: function_options} ->
-            options = Colossus.Options.handle_options(function_options, %{})
+            options = Colossus.Options.handle_options(function_options, options)
             apply(__MODULE__, String.to_atom(action), [args, options])
 
           _ ->
