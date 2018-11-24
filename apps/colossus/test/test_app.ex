@@ -1,5 +1,6 @@
 defmodule Colossus.TestApp do
   use Colossus
+  module_option(:test, description: "hey")
 
   desc("List things")
 

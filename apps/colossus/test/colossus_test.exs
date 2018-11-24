@@ -8,7 +8,8 @@ defmodule ColossusTest do
   end
 
   test "help command for command options desc" do
-    assert {:install, "Install something", [{:sudo}, {:path, "Installiation path"}]} ==
+    assert {:install, "Install something",
+            [{:sudo}, {:path, "Installiation path"}, {:test, "hey"}]} ==
              Colossus.TestApp.help("install")
   end
 

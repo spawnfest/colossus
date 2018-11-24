@@ -1,7 +1,8 @@
 defmodule Colossus.Options do
-  def handle_options(function_options, passed_options) do
-    Enum.reduce(function_options, passed_options, fn func_opt, acc_passed_options ->
-      handle_option(func_opt, acc_passed_options)
+  def handle_options(function_options, passed_options, module_options \\ []) do
+    Enum.reduce(module_options ++ function_options, passed_options, fn combo_opts,
+                                                                       acc_passed_options ->
+      handle_option(combo_opts, acc_passed_options)
     end)
   end
 

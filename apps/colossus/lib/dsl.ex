@@ -20,15 +20,27 @@ defmodule Colossus.DSL do
     end
   end
 
-  defmacro option(key, opts) do
+  defmacro option(key, config) do
     quote do
-      @option {unquote(key), unquote(opts)}
+      @option {unquote(key), unquote(config)}
     end
   end
 
   defmacro option(key) do
     quote do
       @option {unquote(key)}
+    end
+  end
+
+  defmacro module_option(key, config) do
+    quote do
+      @module_option {unquote(key), unquote(config)}
+    end
+  end
+
+  defmacro module_option(key) do
+    quote do
+      @module_option {unquote(key)}
     end
   end
 
@@ -44,7 +56,7 @@ defmodule Colossus.DSL do
             apply(__MODULE__, String.to_atom(action), args)
 
           %{options: function_options} ->
-            options = Colossus.Options.handle_options(function_options, options)
+            options = Colossus.Options.handle_options(function_options, options, @module_option)
             apply(__MODULE__, String.to_atom(action), [args | [options]])
         end
       end
@@ -61,7 +73,7 @@ defmodule Colossus.DSL do
         action = Keyword.get(@actions, key)
 
         options_desc =
-          Enum.map(action.options, fn opt ->
+          Enum.map(action.options ++ @module_option, fn opt ->
             case opt do
               {key, config} ->
                 {key, Keyword.get(config, :description)}

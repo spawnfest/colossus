@@ -5,6 +5,7 @@ defmodule Colossus do
 
       Module.register_attribute(__MODULE__, :desc, [])
       Module.register_attribute(__MODULE__, :option, accumulate: true)
+      Module.register_attribute(__MODULE__, :module_option, accumulate: true)
       Module.register_attribute(__MODULE__, :actions, accumulate: true)
 
       @on_definition Colossus.DSL
