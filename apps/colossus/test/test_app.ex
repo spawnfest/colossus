@@ -9,11 +9,11 @@ defmodule Colossus.TestApp do
   end
 
   desc("Install something")
-  option(:path, required: true, description: "Installiation path")
+  option(:path, required: true, description: "Installiation path", alias: :p)
   option(:sudo)
 
   def install(name, %{path: path}) do
-   Colossus.puts "installing #{name} to path #{path}"
+    "installing #{name} to path #{path}"
   end
 
   def concat(a, b, c) do
