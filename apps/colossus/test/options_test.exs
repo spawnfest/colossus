@@ -16,12 +16,7 @@ defmodule TestOptions do
     end
 
     test "no raise if option is passed" do
-      passed_options = %{path: "/home"}
-
-      IO.inspect(
-        Options.handle_options(Keyword.get(@test_options, :install).options, passed_options)
-      )
-
+      passed_options = %{path: "/home", sudo: false}
       assert passed_options ==
                Options.handle_options(
                  Keyword.get(@test_options, :install).options,

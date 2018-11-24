@@ -26,6 +26,12 @@ defmodule Colossus.DSL do
     end
   end
 
+  defmacro option(key) do
+    quote do
+      @option {unquote(key)}
+    end
+  end
+
   defmacro __before_compile__(_env) do
     quote do
       def run([]) do
@@ -55,14 +61,10 @@ defmodule Colossus.DSL do
       end
 
       def help do
-        IO.inspect(@actions)
-
         for {action, %{description: desc}} <-
               Enum.reject(@actions, fn {name, _} -> name == :run end) do
-          IO.puts("#{action} - #{desc}")
+          {action, desc}
         end
-
-        :ok
       end
     end
   end

@@ -2,7 +2,7 @@ defmodule ColossusTest do
   use ExUnit.Case
   doctest Colossus
 
-  test "greets the world" do
-    assert Colossus.hello() == :world
+  test "list help" do
+    assert [install: "Install something", list: "List things"] == Colossus.TestApp.help
   end
 end
