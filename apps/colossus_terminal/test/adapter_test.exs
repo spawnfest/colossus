@@ -4,7 +4,7 @@ defmodule AdapterTest do
   describe "parse" do
     test "with options" do
       line = "Yehuda herua --from 'Carl Lerche' \n"
-      IO.inspect ColossusTerminal.Adapter.parse(line)
+      IO.inspect(ColossusTerminal.Adapter.parse(line))
     end
   end
 end
