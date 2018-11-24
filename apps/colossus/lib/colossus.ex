@@ -1,0 +1,2 @@
+defmodule Colossus do
+end
