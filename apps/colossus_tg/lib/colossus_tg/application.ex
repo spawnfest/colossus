@@ -10,8 +10,9 @@ defmodule ColossusTg.Application do
     children = [
       # Starts a worker by calling: ColossusTg.Worker.start_link(arg)
       {SmartHome.StateServer, []},
-      {ColossusTg.Bot, []},
-      {Registry, keys: :unique, name: ColossusTg.UserRegistry}
+      {ColossusTg.UserServer.Supervisor, []},
+      {Registry, keys: :unique, name: ColossusTg.UserRegistry},
+      {ColossusTg.Bot, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
