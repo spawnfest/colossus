@@ -13,6 +13,7 @@ We will try to controll the house with next commands:
 * light off #id
 * light toggle #id
 * laundry start
+* laundry stop
 * laundry status
 * laundry watch
 
