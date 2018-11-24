@@ -17,6 +17,7 @@ defmodule TestOptions do
 
     test "no raise if option is passed" do
       passed_options = %{path: "/home", sudo: false}
+
       assert passed_options ==
                Options.handle_options(
                  Keyword.get(@test_options, :install).options,
@@ -26,7 +27,12 @@ defmodule TestOptions do
 
     test "it set default value" do
       passed_options = %{path: "/home"}
-      assert %{sudo: false, path: "/home"} == Options.handle_options(Keyword.get(@test_options, :install).options, passed_options)
+
+      assert %{sudo: false, path: "/home"} ==
+               Options.handle_options(
+                 Keyword.get(@test_options, :install).options,
+                 passed_options
+               )
     end
   end
 end

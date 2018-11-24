@@ -59,14 +59,18 @@ defmodule Colossus.DSL do
       def help(action_key) do
         key = String.to_existing_atom(action_key)
         action = Keyword.get(@actions, key)
-        options_desc = Enum.map(action.options, fn(opt) ->
-          case opt do
-            {key, config} ->
-              {key, Keyword.get(config, :description)}
-            {key} ->
-              {key}
-          end
-        end)
+
+        options_desc =
+          Enum.map(action.options, fn opt ->
+            case opt do
+              {key, config} ->
+                {key, Keyword.get(config, :description)}
+
+              {key} ->
+                {key}
+            end
+          end)
+
         {key, action.description, options_desc}
       end
     end

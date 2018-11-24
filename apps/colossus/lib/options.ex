@@ -1,18 +1,20 @@
 defmodule Colossus.Options do
   def handle_options(function_options, passed_options) do
-    Enum.reduce(function_options, passed_options, fn (func_opt, acc_passed_options) ->
+    Enum.reduce(function_options, passed_options, fn func_opt, acc_passed_options ->
       handle_option(func_opt, acc_passed_options)
     end)
   end
 
   def handle_option({key, specs} = opt, passed_options) do
-    Enum.reduce(specs, passed_options, fn (spec, acc) ->
+    Enum.reduce(specs, passed_options, fn spec, acc ->
       case spec do
         {:required, true} ->
           validate_required(opt, acc)
           acc
+
         {:default, value} ->
           set_default_value(acc, key, value)
+
         _ ->
           acc
       end
@@ -27,9 +29,11 @@ defmodule Colossus.Options do
     case Map.fetch(passed_options, key) do
       {:ok, value} ->
         value
+
       _ ->
         raise "required options #{key} missing"
     end
+
     opt
   end
 
