@@ -1,9 +1,12 @@
 defmodule Colossus.DSL do
   def __on_definition__(env, :def, name, _args, _guards, _body) do
-    if desc = Module.get_attribute(env.module, :desc) do
-      Module.put_attribute(env.module, :actions, {name, desc})
-      Module.delete_attribute(env.module, :desc)
-    end
+    desc = Module.get_attribute(env.module, :desc) 
+    options = Module.get_attribute(env.module, :option) 
+
+    Module.put_attribute(env.module, :actions, {name, desc, options})
+
+    Module.delete_attribute(env.module, :desc)
+    Module.delete_attribute(env.module, :option)
   end
 
   def __on_definition__(_, _, _, _, _, _) do
@@ -12,6 +15,12 @@ defmodule Colossus.DSL do
   defmacro desc(text) do
     quote do
       @desc unquote(text)
+    end
+  end
+
+  defmacro option(key, opts) do
+    quote do
+      @option {unquote(key), unquote(opts)}
     end
   end
 
@@ -26,7 +35,8 @@ defmodule Colossus.DSL do
       end
 
       def help do
-        for {action, desc} <- @actions do
+        IO.inspect(@actions)
+        for {action, desc, _} <- Enum.reject(@actions, fn {name, _, _} -> name == :run end) do
           IO.puts "#{action} - #{desc}"
         end
         :ok
