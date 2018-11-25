@@ -14,18 +14,21 @@ defmodule Colossus.DSL do
   def __on_definition__(_, _, _, _, _, _) do
   end
 
+  @doc "Describes action"
   defmacro desc(text) do
     quote do
       @desc unquote(text)
     end
   end
 
+  @doc "Specify options for action"
   defmacro option(key, config \\ []) do
     quote do
       @option {unquote(key), unquote(config)}
     end
   end
 
+  @doc "Global options for all action in module"
   defmacro module_option(key, config \\ []) do
     quote do
       @module_option {unquote(key), unquote(config)}
