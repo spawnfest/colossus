@@ -1,6 +1,6 @@
 # ColossusTg
 
-![Telegram screen](extra/screen.jpg?raw=true "Screen")
+![Telegram screen](extra/screen.png?raw=true "Screen")
 
 This example project utilises both **Colossus** and **Agala Telegram** libraries in order to create `Command Line Interface` over messenger.
 CLI is controlling small SmarHome, that is presented in `smart_home` project unhder same umbrella application.
