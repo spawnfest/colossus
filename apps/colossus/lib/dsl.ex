@@ -38,7 +38,7 @@ defmodule Colossus.DSL do
   defmacro __before_compile__(_env) do
     quote do
       def run([]) do
-        Colossus.IO.puts(help)
+        Colossus.puts(help)
       end
 
       def run(message, adapter, output \\ nil) do
@@ -74,7 +74,7 @@ defmodule Colossus.DSL do
           {action, desc}
         end
 
-        Colossus.IO.puts(@help_encoder.(commands))
+        Colossus.puts(@help_encoder.(commands))
       end
 
       def help(action_key) do
@@ -92,7 +92,7 @@ defmodule Colossus.DSL do
             end
           end)
 
-        Colossus.IO.puts(@help_command_encoder.({key, action.description, options_desc}))
+        Colossus.puts(@help_command_encoder.({key, action.description, options_desc}))
       end
 
       def execute([action | args], options \\ %{}) do
@@ -139,7 +139,7 @@ defmodule Colossus.DSL do
       end
 
       defp missing_action(message) do
-        Colossus.IO.puts """
+        Colossus.puts """
          There is no such command #{message}
          Please check list of available commands
         """
