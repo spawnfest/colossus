@@ -77,12 +77,18 @@ defmodule Colossus.DSL do
       end
 
       def help do
-        puts(@help_encoder.(not_propiretary_actions))
+        not_propiretary_actions
+        |> compress_commands_for_help
+        |> @help_encoder.()
+        |> puts
       end
 
       def help(action_key) do
         key = String.to_existing_atom(action_key)
-        action = Keyword.get(@actions, key)
+        action =
+          not_propiretary_actions
+          |> compress_commands_for_help
+          |> Keyword.get(key)
 
         options_desc =
           Enum.map(action.options ++ @module_option, fn opt ->
@@ -139,6 +145,16 @@ defmodule Colossus.DSL do
         |> Tuple.to_list()
         |> Enum.reverse()
         |> List.update_at(1, &Enum.into(&1, %{}))
+      end
+
+      defp compress_commands_for_help(commands) do
+        commands
+        |> Enum.uniq()
+        |> Enum.filter(fn {key, config} ->
+          Enum.find(commands, fn {k, v} ->
+            k == key && config.description && config.arity == v.arity && is_nil(v.description)
+          end)
+        end)
       end
 
       defp missing_action(message) do
