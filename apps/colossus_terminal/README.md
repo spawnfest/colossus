@@ -1,21 +1,13 @@
 # ColossusTerminal
 
-**TODO: Add description**
+![Telegram screen](extra/screen.png?raw=true "Screen")
 
-## Installation
+This example project utilises **Colossus** library in order to create `Command Line Interface` over **Terminal**.
+CLI is controlling small SmarHome, that is presented in `smart_home` project unhder same umbrella application.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `colossus_terminal` to your list of dependencies in `mix.exs`:
+We are using amazing *scripting* capabilities of Elixir's `EXS` files and scripts in order to create this command line interface
 
-```elixir
-def deps do
-  [
-    {:colossus_terminal, "~> 0.1.0"}
-  ]
-end
-```
+# Running instructions
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/colossus_terminal](https://hexdocs.pm/colossus_terminal).
-
+1. The only thing you should do - `mix run cli.exs`
+2. Type any commands as shown on the screenshot.
