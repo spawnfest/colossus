@@ -41,26 +41,30 @@ defmodule Colossus.DSL do
       def run(message, adapter, output \\ nil) do
         Process.put(Colossus.IO, output)
 
-        [action_name | opts] =
-          args =
+        args =
           message
           |> adapter.parse
           |> OptionParser.split()
 
-        if is_action_present?(action_name) do
-          aliases = get_action_config(action_name).options |> get_aliases
-          Process.put(Colossus.IO, output)
-          apply(&execute/2, create_cmd(args, aliases))
-        else
-          @missing_action.(action_name)
+        case args do
+          [action_name | opts] ->
+            if is_action_present?(action_name) do
+              aliases = get_action_config(action_name).options |> get_aliases
+              Process.put(Colossus.IO, output)
+              apply(&execute/2, create_cmd(args, aliases))
+            else
+              @missing_action.(action_name)
+            end
+          _ ->
+            @missing_action.(message)
         end
       end
 
       def help do
         commands =
-          for {action, %{description: desc}} <- not_propiretary_actions do
-            {action, desc}
-          end
+        for {action, %{description: desc}} <- not_propiretary_actions do
+          {action, desc}
+        end
 
         Colossus.IO.puts(@help_encoder.(commands))
       end
@@ -118,7 +122,7 @@ defmodule Colossus.DSL do
         |> Enum.member?(action_name)
       end
 
-      defp create_cmd(arg, aliases) do
+      defp create_cmd(args, aliases) do
         args
         |> OptionParser.parse!(aliases: aliases, switches: [])
         |> Tuple.to_list()
@@ -127,7 +131,6 @@ defmodule Colossus.DSL do
       end
     end
   end
-
   def missing_action(action_name) do
     ""
   end
