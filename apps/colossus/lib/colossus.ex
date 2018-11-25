@@ -1,6 +1,14 @@
 defmodule Colossus do
-  use Colossus.IO
+  @moduledoc """
+    Main module. Provides using macro that allow you to use our DSL.
+    If you want to customize output of help commands you can by passing
+    options to use macro.
 
+    Example:
+    use Colossus, help_encoder: &my_help_encoder/1
+  """
+  use Colossus.IO
+  
   defmacro __using__(opts \\ []) do
     quote do
       use Colossus.IO

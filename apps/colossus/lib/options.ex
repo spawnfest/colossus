@@ -1,4 +1,7 @@
 defmodule Colossus.Options do
+  @moduledoc """
+    Provides private api for working with Options
+  """
   def handle_options(function_options, passed_options, module_options \\ []) do
     options_config = module_options ++ function_options
     filtred_passed_options = Map.take(passed_options, Keyword.keys(options_config))

@@ -1,7 +1,12 @@
 defmodule Colossus.Encoder do
+  @moduledoc """
+   Provides varous encode utilities such ~E sigil for work with EEx inside funcitons and 
+   default encoders for help menu
+  """
   @callback encode(any) :: String.t()
   @callback parse(String.t()) :: String.t()
 
+  @doc "Provides sigil for working with EEx"
   defmacro sigil_E(expr, opts) do
     handle_sigil(expr, opts, __CALLER__.line)
   end

@@ -1,4 +1,7 @@
 defmodule Colossus.DSL do
+  @moduledoc """
+    Provides essential DSL for creating CLI apps
+  """
   alias Colossus.Options
 
   def __on_definition__(env, :def, name, args, _guards, _body) do
@@ -28,6 +31,7 @@ defmodule Colossus.DSL do
     end
   end
 
+  @doc "Provides a long description for command. it will apper in `help command_name"
   defmacro long_desc(text) do
     quote do
       @long_desc unquote(text)
