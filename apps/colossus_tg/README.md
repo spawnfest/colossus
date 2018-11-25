@@ -11,8 +11,8 @@ With adding an authorisations system, this can be easyly applied to real life pu
 # Running instructions
 
 1. Firstly, you need to create your own **Telegram Bot** using Telegram's Bot Father. The only 2 arguments that should be retreiven in this process:
-  * Link to new bot's private messages.
-  * Bot's *token* that will be utilized in this application.
+   * Link to new bot's private messages.
+   * Bot's *token* that will be utilized in this application.
 
 2. This application will try to find the token under
    ```elixir
