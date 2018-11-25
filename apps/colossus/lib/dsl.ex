@@ -139,7 +139,11 @@ defmodule Colossus.DSL do
       end
 
       defp missing_action(message) do
-        ""
+        Colossus.IO.puts """
+         There is no such command #{message}
+         Please check list of available commands
+        """
+        help
       end
     end
   end
