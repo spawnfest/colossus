@@ -3,6 +3,7 @@ defmodule Colossus do
 
   defmacro __using__(opts \\ []) do
     quote do
+      use Colossus.IO
       import Colossus.DSL
       import Colossus.Encoder
       Module.register_attribute(__MODULE__, :desc, [])

@@ -42,7 +42,7 @@ defmodule Colossus.DSL do
   defmacro __before_compile__(_env) do
     quote do
       def run([]) do
-        Colossus.puts(help)
+        puts(help())
       end
 
       def run(message, adapter, output \\ nil) do
@@ -54,15 +54,18 @@ defmodule Colossus.DSL do
           |> OptionParser.split()
 
         case args do
+          ["run" | opts] ->
+            help
           [action_name | opts] ->
             if is_action_present?(action_name) do
               aliases = get_action_config(action_name).options |> get_aliases
               Process.put(Colossus.IO, output)
-
               try do
                 apply(&execute/2, create_cmd(args, aliases))
               rescue
                 UndefinedFunctionError ->
+                  help(action_name)
+                FunctionClauseError ->
                   help(action_name)
               end
             else
@@ -75,25 +78,37 @@ defmodule Colossus.DSL do
       end
 
       def help do
-        Colossus.IO.puts(@help_encoder.(not_propiretary_actions))
+        not_propiretary_actions()
+        |> compress_commands_for_help()
+        |> @help_encoder.()
+        |> puts
       end
 
       def help(action_key) do
         key = String.to_existing_atom(action_key)
-        action = Keyword.get(@actions, key)
 
-        options_desc =
-          Enum.map(action.options ++ @module_option, fn opt ->
-            case opt do
-              {key, config} ->
-                {key, Keyword.get(config, :description)}
+        try do
+          action =
+            not_propiretary_actions()
+            |> compress_commands_for_help
+            |> Keyword.get(key)
 
-              {key} ->
-                {key}
-            end
-          end)
+          options_desc =
+            Enum.map(action.options ++ @module_option, fn opt ->
+              case opt do
+                {key, config} ->
+                  {key, Keyword.get(config, :description)}
 
-        Colossus.puts(@help_command_encoder.({key, action.description, options_desc}))
+                {key} ->
+                  {key}
+              end
+            end)
+
+          puts(@help_command_encoder.({key, action.description, options_desc}))
+        rescue 
+        UndefinedFunctionError ->
+            puts("No such function")
+        end
       end
 
       def execute([action | args], options \\ %{}) do
@@ -102,7 +117,7 @@ defmodule Colossus.DSL do
             apply(__MODULE__, String.to_atom(action), args)
 
           %{options: function_options} ->
-            options = Colossus.Options.handle_options(function_options, options, @module_option)
+            options = Options.handle_options(function_options, options, @module_option)
             apply(__MODULE__, String.to_atom(action), [args | [options]])
         end
       end
@@ -139,13 +154,24 @@ defmodule Colossus.DSL do
         |> List.update_at(1, &Enum.into(&1, %{}))
       end
 
+      defp compress_commands_for_help(commands) do
+        commands
+        |> Enum.uniq()
+        |> Enum.filter(fn {key, config} ->
+          Enum.find(commands, fn {k, v} ->
+            k == key && config.description && config.arity == v.arity && is_nil(v.description)
+          end)
+        end)
+        |> Enum.uniq_by(&(elem(&1,0)))
+      end
+
       defp missing_action(message) do
-        Colossus.IO.puts("""
+        puts("""
          There is no such command #{message}
          Please check list of available commands
         """)
 
-        help
+        help()
       end
     end
   end
