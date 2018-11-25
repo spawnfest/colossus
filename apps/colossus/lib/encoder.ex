@@ -17,10 +17,19 @@ defmodule Colossus.Encoder do
   end
 
   def default_encode_help_to_eex(commands) do
+    compressed_commands =
+      commands
+      |> Enum.uniq()
+      |> Enum.filter(fn {key, config} ->
+        Enum.find(commands, fn {k, v} ->
+          k == key && config.description && config.arity == v.arity && is_nil(v.description)
+        end)
+      end)
+
     ~E"""
     Available Comands:
-     <%= for {name, desc} <- commands do %>
-       <%= String.pad_trailing(to_string(name), 15) <> " # " <> to_string(desc) %>
+     <%= for {name, config} <- commands do %>
+       <%= String.pad_trailing(to_string(name) <> "/" <> to_string(config.arity) , 15) <> " # " <> to_string(config.description) %>
      <% end %>
     """
   end
