@@ -2,6 +2,7 @@ defmodule Colossus.Options do
   def handle_options(function_options, passed_options, module_options \\ []) do
     options_config = module_options ++ function_options
     filtred_passed_options = Map.take(passed_options, Keyword.keys(options_config))
+
     Enum.reduce(options_config, filtred_passed_options, fn combo_opts, acc_passed_options ->
       handle_option(combo_opts, acc_passed_options)
     end)
