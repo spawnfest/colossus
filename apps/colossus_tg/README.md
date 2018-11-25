@@ -31,4 +31,4 @@ With adding an authorisations system, this can be easyly applied to real life pu
 
    ```
 
-3. Start application using `iex -S mix`
+3. Start application using `iex -S mix` or `mix run --no-halt`
