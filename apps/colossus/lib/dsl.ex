@@ -54,7 +54,12 @@ defmodule Colossus.DSL do
             if is_action_present?(action_name) do
               aliases = get_action_config(action_name).options |> get_aliases
               Process.put(Colossus.IO, output)
-              apply(&execute/2, create_cmd(args, aliases))
+              try  do
+                apply(&execute/2, create_cmd(args, aliases))
+              rescue
+                UndefinedFunctionError ->
+                  help(action_name)
+              end
             else
               missing_action(action_name)
             end
