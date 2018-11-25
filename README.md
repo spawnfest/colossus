@@ -11,7 +11,7 @@ which does not allow users to choose **IO** layer of communication.
 
 **Colossus** try to eliminate the disadvantage, while remaining equally simple.
 
-## Quiq-start
+## Quick-start
 
 **Colossus** tryes not to bring semantics complexity to new users, thats why it utilise the same **DSL** as **Thor** - well-known **Ruby** CLI framework.
 
