@@ -6,4 +6,8 @@ defmodule SmartHome.CLI do
   def light("on", name) do
     Colossus.Terminal.OutHandler.puts("Turingin on: #{name}")
   end
+
+  defp missing_action(message) do
+    Colossus.Terminal.OutHandler.puts("there is no such a thing")
+  end
 end

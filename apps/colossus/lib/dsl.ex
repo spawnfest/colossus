@@ -53,10 +53,10 @@ defmodule Colossus.DSL do
               Process.put(Colossus.IO, output)
               apply(&execute/2, create_cmd(args, aliases))
             else
-              @missing_action.(action_name)
+              missing_action(action_name)
             end
           _ ->
-            @missing_action.(message)
+            missing_action(message)
         end
       end
 
@@ -99,7 +99,7 @@ defmodule Colossus.DSL do
       end
 
       defp not_propiretary_actions do
-        propiretary_functions = [:run, :help, :execute]
+        propiretary_functions = [:run, :help, :execute, :missing_action]
         Enum.reject(@actions, fn {name, _} -> Enum.member?(propiretary_functions, name) end)
       end
 
@@ -129,9 +129,10 @@ defmodule Colossus.DSL do
         |> Enum.reverse()
         |> List.update_at(1, &Enum.into(&1, %{}))
       end
+
+      defp missing_action(message) do
+        ""
+      end
     end
-  end
-  def missing_action(action_name) do
-    ""
   end
 end
