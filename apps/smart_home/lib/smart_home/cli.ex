@@ -60,12 +60,12 @@ defmodule SmartHome.CLI do
   desc "<operation>", "performs operations with laundry"
   desc("<operation>  <name>", "turns light on/off")
   long_desc """
-  Turn ligh on/of
+  Turn laundry on/of
   <operation> - can be one of "start", "stop", "status", "watch"
   Usage Example:
-  light on bulb1
-  light show bulb1
-  light toggle bulb1
+  light on laundry
+  light show laundry
+  light toggle laundry
   """
   def laundry("start") do
     Colossus.live()
