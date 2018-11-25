@@ -1,14 +1,12 @@
 defmodule ColossusTerminal.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
-
   use Application
 
+  @doc """
+  This function will start our application during loading process for the cli script.
+  We need to start Home's state server, in order to control it with our CLI
+  """
   def start(_type, _args) do
-    # List all child processes to be supervised
     children = [
-      # Starts a worker by calling: ColossusTerminal.Worker.start_link(arg)
       {SmartHome.StateServer, []}
     ]
 
