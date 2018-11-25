@@ -47,24 +47,10 @@ defmodule Colossus.DSL do
           |> adapter.parse
           |> OptionParser.split()
 
-        is_action_present =
-          @actions
-          |> Keyword.keys()
-          |> Enum.map(&to_string/1)
-          |> Enum.member?(action_name)
-
-        if is_action_present || action_name == "help" do
+        if is_action_present?(action_name) do
           aliases = get_action_config(action_name).options |> get_aliases
-
-          cmd =
-            args
-            |> OptionParser.parse!(aliases: aliases, switches: [])
-            |> Tuple.to_list()
-            |> Enum.reverse()
-            |> List.update_at(1, &Enum.into(&1, %{}))
-
           Process.put(Colossus.IO, output)
-          apply(&execute/2, cmd)
+          apply(&execute/2, create_cmd(args, aliases))
         else
           @missing_action.(action_name)
         end
@@ -122,6 +108,22 @@ defmodule Colossus.DSL do
           {Keyword.get(v, :alias), k}
         end)
         |> Enum.filter(&elem(&1, 1))
+      end
+
+      defp is_action_present?(action_name) do
+        @actions
+        |> Keyword.keys()
+        |> Enum.map(&to_string/1)
+        |> List.insert_at(0, "help")
+        |> Enum.member?(action_name)
+      end
+
+      defp create_cmd(arg, aliases) do
+        args
+        |> OptionParser.parse!(aliases: aliases, switches: [])
+        |> Tuple.to_list()
+        |> Enum.reverse()
+        |> List.update_at(1, &Enum.into(&1, %{}))
       end
     end
   end

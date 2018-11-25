@@ -10,8 +10,8 @@ defmodule Colossus do
       @on_definition Colossus.DSL
       @before_compile Colossus.DSL
 
-      @help_encoder &Colossus.IOAdapter.default_encode_help_to_eex/1
-      @help_command_encoder &Colossus.IOAdapter.default_encode_help_command_to_eex/1
+      @help_encoder &Colossus.Encoder.default_encode_help_to_eex/1
+      @help_command_encoder &Colossus.Encoder.default_encode_help_command_to_eex/1
 
       @missing_action &Colossus.DSL.missing_action/1
     end

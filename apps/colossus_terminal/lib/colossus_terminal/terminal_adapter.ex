@@ -1,5 +1,5 @@
 defmodule ColossusTerminal.Adapter do
-  @behaviour Colossus.IOAdapter
+  @behaviour Colossus.Encoder
 
   def parse(message) do
     message
