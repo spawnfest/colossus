@@ -168,7 +168,7 @@ defmodule Colossus.DSL do
         |> Enum.uniq()
         |> Enum.filter(fn {key, config} ->
           Enum.find(commands, fn {k, v} ->
-            k == key && config.description && config.arity == v.arity && is_nil(v.description)
+            k == key && config.arity == v.arity && is_nil(v.description)
           end)
         end)
         |> Enum.uniq_by(&(elem(&1,0)))
