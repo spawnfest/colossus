@@ -18,7 +18,7 @@ defmodule Colossus.Encoder do
 
   def default_encode_help_to_eex(commands) do
     ~E"""
-    Available Methods:
+    Available Comands:
      <%= for {name, desc} <- commands do %>
        <%= String.pad_trailing(to_string(name), 15) <> " # " <> to_string(desc) %>
      <% end %>
