@@ -2,9 +2,7 @@ defmodule SmartHome.CLI do
   # Echo CLI
   use Colossus
 
-  desc "operations with light bulbs"
-  def light(operation, name)
-
+  desc "<operation>  <name>", "turns light on/off"
   def light("on", name) do
     Colossus.live()
     Colossus.puts("Turingin on: #{name}")

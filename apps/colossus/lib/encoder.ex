@@ -21,7 +21,7 @@ defmodule Colossus.Encoder do
     ~E"""
     Available Comands:
      <%= for {name, config} <- commands do %>
-       <%= String.pad_trailing(to_string(name) <> "/" <> to_string(config.arity) , 15) <> " # " <> to_string(config.description) %>
+       <%= String.pad_trailing(to_string(name) <> " " <> to_string(config.arguments) , 20) <> " # " <> to_string(config.description) %>
      <% end %>
     """
   end
