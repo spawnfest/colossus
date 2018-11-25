@@ -1,5 +1,4 @@
-defmodule Colossus.IOAdapter do
-  @callback parse(String.t()) :: [{list(String.t()), map}] | no_return
+defmodule Colossus.Encoder do
   @callback encode(any) :: {:ok, String.t()}
 
   defmacro sigil_E(expr, opts) do

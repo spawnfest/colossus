@@ -58,7 +58,12 @@ defmodule Colossus.Terminal.OutHandler do
 
       :live ->
         "\r#{message}"
-        |> String.pad_trailing(elem(:io.columns(), 1))
+        |> String.pad_trailing(
+          System.cmd("tput", ["cols"])
+          |> elem(0)
+          |> Integer.parse()
+          |> elem(0)
+        )
         |> IO.write()
 
         :ok

@@ -14,18 +14,21 @@ defmodule Colossus.DSL do
   def __on_definition__(_, _, _, _, _, _) do
   end
 
+  @doc "Describes action"
   defmacro desc(text) do
     quote do
       @desc unquote(text)
     end
   end
 
+  @doc "Specify options for action"
   defmacro option(key, config \\ []) do
     quote do
       @option {unquote(key), unquote(config)}
     end
   end
 
+  @doc "Global options for all action in module"
   defmacro module_option(key, config \\ []) do
     quote do
       @module_option {unquote(key), unquote(config)}
@@ -41,40 +44,30 @@ defmodule Colossus.DSL do
       def run(message, adapter, output \\ nil) do
         Process.put(Colossus.IO, output)
 
-        [action_name | opts] =
-          args =
+        args =
           message
           |> adapter.parse
           |> OptionParser.split()
 
-        is_action_present =
-          @actions
-          |> Keyword.keys()
-          |> Enum.map(&to_string/1)
-          |> Enum.member?(action_name)
-
-        if is_action_present || action_name == "help" do
-          aliases = get_action_config(action_name).options |> get_aliases
-
-          cmd =
-            args
-            |> OptionParser.parse!(aliases: aliases, switches: [])
-            |> Tuple.to_list()
-            |> Enum.reverse()
-            |> List.update_at(1, &Enum.into(&1, %{}))
-
-          Process.put(Colossus.IO, output)
-          apply(&execute/2, cmd)
-        else
-          @missing_action.(action_name)
+        case args do
+          [action_name | opts] ->
+            if is_action_present?(action_name) do
+              aliases = get_action_config(action_name).options |> get_aliases
+              Process.put(Colossus.IO, output)
+              apply(&execute/2, create_cmd(args, aliases))
+            else
+              missing_action(action_name)
+            end
+          _ ->
+            missing_action(message)
         end
       end
 
       def help do
         commands =
-          for {action, %{description: desc}} <- not_propiretary_actions do
-            {action, desc}
-          end
+        for {action, %{description: desc}} <- not_propiretary_actions do
+          {action, desc}
+        end
 
         Colossus.IO.puts(@help_encoder.(commands))
       end
@@ -109,7 +102,7 @@ defmodule Colossus.DSL do
       end
 
       defp not_propiretary_actions do
-        propiretary_functions = [:run, :help, :execute]
+        propiretary_functions = [:run, :help, :execute, :missing_action]
         Enum.reject(@actions, fn {name, _} -> Enum.member?(propiretary_functions, name) end)
       end
 
@@ -123,10 +116,26 @@ defmodule Colossus.DSL do
         end)
         |> Enum.filter(&elem(&1, 1))
       end
-    end
-  end
 
-  def missing_action(action_name) do
-    ""
+      defp is_action_present?(action_name) do
+        @actions
+        |> Keyword.keys()
+        |> Enum.map(&to_string/1)
+        |> List.insert_at(0, "help")
+        |> Enum.member?(action_name)
+      end
+
+      defp create_cmd(args, aliases) do
+        args
+        |> OptionParser.parse!(aliases: aliases, switches: [])
+        |> Tuple.to_list()
+        |> Enum.reverse()
+        |> List.update_at(1, &Enum.into(&1, %{}))
+      end
+
+      defp missing_action(message) do
+        ""
+      end
+    end
   end
 end
