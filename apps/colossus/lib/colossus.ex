@@ -13,8 +13,20 @@ defmodule Colossus do
       @on_definition Colossus.DSL
       @before_compile Colossus.DSL
 
-      @help_encoder unquote(Keyword.get(opts, :help_encoder, &Colossus.Encoder.default_encode_help_to_eex/1))
-      @help_command_encoder unquote(Keyword.get(opts, :help_command_encoder, &Colossus.Encoder.default_encode_help_command_to_eex/1))
+      @help_encoder unquote(
+                      Keyword.get(
+                        opts,
+                        :help_encoder,
+                        &Colossus.Encoder.default_encode_help_to_eex/1
+                      )
+                    )
+      @help_command_encoder unquote(
+                              Keyword.get(
+                                opts,
+                                :help_command_encoder,
+                                &Colossus.Encoder.default_encode_help_command_to_eex/1
+                              )
+                            )
     end
   end
 end

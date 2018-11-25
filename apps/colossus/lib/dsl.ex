@@ -1,11 +1,15 @@
 defmodule Colossus.DSL do
   alias Colossus.Options
 
-  def __on_definition__(env, :def, name, _args, _guards, _body) do
+  def __on_definition__(env, :def, name, args, _guards, _body) do
     desc = Module.get_attribute(env.module, :desc)
     options = Module.get_attribute(env.module, :option)
 
-    Module.put_attribute(env.module, :actions, {name, %{description: desc, options: options}})
+    Module.put_attribute(
+      env.module,
+      :actions,
+      {name, %{description: desc, options: options, arity: elem(env.function, 1)}}
+    )
 
     Module.delete_attribute(env.module, :desc)
     Module.delete_attribute(env.module, :option)
@@ -54,7 +58,8 @@ defmodule Colossus.DSL do
             if is_action_present?(action_name) do
               aliases = get_action_config(action_name).options |> get_aliases
               Process.put(Colossus.IO, output)
-              try  do
+
+              try do
                 apply(&execute/2, create_cmd(args, aliases))
               rescue
                 UndefinedFunctionError ->
@@ -63,18 +68,14 @@ defmodule Colossus.DSL do
             else
               missing_action(action_name)
             end
+
           _ ->
             missing_action(message)
         end
       end
 
       def help do
-        commands =
-        for {action, %{description: desc}} <- not_propiretary_actions do
-          {action, desc}
-        end
-
-        Colossus.puts(@help_encoder.(commands))
+        Colossus.IO.puts(@help_encoder.(not_propiretary_actions))
       end
 
       def help(action_key) do
@@ -139,10 +140,11 @@ defmodule Colossus.DSL do
       end
 
       defp missing_action(message) do
-        Colossus.puts """
+        Colossus.IO.puts("""
          There is no such command #{message}
          Please check list of available commands
-        """
+        """)
+
         help
       end
     end
