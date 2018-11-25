@@ -1,8 +1,6 @@
 defmodule Colossus.IOAdapter do
-  @callback parse(String.t) :: [{list(String.t), map}] | no_return
-  @callback encode(any) :: {:ok, String.t} 
-
-
+  @callback parse(String.t()) :: [{list(String.t()), map}] | no_return
+  @callback encode(any) :: {:ok, String.t()}
 
   defmacro sigil_E(expr, opts) do
     handle_sigil(expr, opts, __CALLER__.line)
@@ -14,9 +12,9 @@ defmodule Colossus.IOAdapter do
 
   defp handle_sigil(_, _, _) do
     raise ArgumentError,
-      "interpolation not allowed in ~e sigil. " <>
-      "Remove the interpolation, use <%= %> to insert values, " <>
-      "or use ~E to show the interpolation literally"
+          "interpolation not allowed in ~e sigil. " <>
+            "Remove the interpolation, use <%= %> to insert values, " <>
+            "or use ~E to show the interpolation literally"
   end
 
   def default_encode_help_to_eex(commands) do
@@ -30,14 +28,11 @@ defmodule Colossus.IOAdapter do
 
   def default_encode_help_command_to_eex({key, desc, options}) do
     ~E"""
-    Command <%= to_string(key) %> :
-    Description:
-    <%= desc %>
-
-    Options:
-    <%= for {name, desc} <- options do %>
-      <%= String.pad_trailing(to_string(name), 15) <> " # " <> to_string(desc) %>
-    <% end %>
+    Command: <%= to_string(key) %> 
+    Description: <%= desc %>
+    Options: <%= for {name, desc} <- options do %>
+       <%= String.pad_trailing(to_string(name), 15) <> " # " <> to_string(desc) %>
+     <% end %>
     """
   end
 end

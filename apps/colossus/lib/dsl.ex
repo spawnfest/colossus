@@ -39,23 +39,35 @@ defmodule Colossus.DSL do
       end
 
       def run(message, adapter, output \\ nil) do
+        Process.put(Colossus.IO, output)
+
         [action_name | opts] =
           args =
           message
           |> adapter.parse
           |> OptionParser.split()
 
-        aliases = get_action_config(action_name).options |> get_aliases
+        is_action_present =
+          @actions
+          |> Keyword.keys()
+          |> Enum.map(&to_string/1)
+          |> Enum.member?(action_name)
 
-        cmd =
-          args
-          |> OptionParser.parse!(aliases: aliases)
-          |> Tuple.to_list()
-          |> Enum.reverse()
-          |> List.update_at(1, &Enum.into(&1, %{}))
+        if is_action_present || action_name == "help" do
+          aliases = get_action_config(action_name).options |> get_aliases
 
-        Process.put(Colossus.IO, output)
-        apply(&execute/2, cmd)
+          cmd =
+            args
+            |> OptionParser.parse!(aliases: aliases, switches: [])
+            |> Tuple.to_list()
+            |> Enum.reverse()
+            |> List.update_at(1, &Enum.into(&1, %{}))
+
+          Process.put(Colossus.IO, output)
+          apply(&execute/2, cmd)
+        else
+          @missing_action.(action_name)
+        end
       end
 
       def help do
@@ -112,5 +124,9 @@ defmodule Colossus.DSL do
         |> Enum.filter(&elem(&1, 1))
       end
     end
+  end
+
+  def missing_action(action_name) do
+    ""
   end
 end
