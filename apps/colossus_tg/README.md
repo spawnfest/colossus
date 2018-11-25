@@ -2,7 +2,7 @@
 
 ![Telegram screen](extra/screen.png?raw=true "Screen")
 
-This example project utilises both **Colossus** and **Agala Telegram** libraries in order to create `Command Line Interface` over messenger.
+This example project utilises both **Colossus** and **Agala Telegram** libraries in order to create `Command Line Interface` over **Telegram messenger**.
 CLI is controlling small SmarHome, that is presented in `smart_home` project unhder same umbrella application.
 
 Because of perfect OTP's **actor system**, each separate user can concurrently (with some kind of CRDT) controll single SmartHome instance.
@@ -32,3 +32,4 @@ With adding an authorisations system, this can be easyly applied to real life pu
    ```
 
 3. Start application using `iex -S mix` or `mix run --no-halt`
+4. Go to Direct Messages to the bot, and try any awailable command, as shown on the screenshot in this readme.
