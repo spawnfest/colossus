@@ -27,6 +27,10 @@ defmodule SmartHome.StateServer do
     GenServer.call(__MODULE__, {:switch_toggle, switch_name})
   end
 
+  def switch_state(switch_name) do
+    GenServer.call(__MODULE__, {:switch_state, switch_name})
+  end
+
   def laundry_start do
     GenServer.call(__MODULE__, :laundry_start)
   end
@@ -48,27 +52,43 @@ defmodule SmartHome.StateServer do
   end
 
   def handle_call({:switch_on, switch_name}, _from, state) do
+    :timer.sleep(2000)
+
     case Map.get(state.switches, switch_name) do
       nil -> {:reply, :error, state}
-      value -> {:reply, :ok, put_in(state, [:switches, switch_name], true)}
+      _value -> {:reply, :ok, put_in(state, [:switches, switch_name], true)}
     end
   end
 
   def handle_call({:switch_off, switch_name}, _from, state) do
+    :timer.sleep(2000)
+
     case Map.get(state.switches, switch_name) do
       nil -> {:reply, :error, state}
-      value -> {:reply, :ok, put_in(state, [:switches, switch_name], false)}
+      _value -> {:reply, :ok, put_in(state, [:switches, switch_name], false)}
     end
   end
 
   def handle_call({:switch_toggle, switch_name}, _from, state) do
+    :timer.sleep(2000)
+
     case Map.get(state.switches, switch_name) do
       nil -> {:reply, :error, state}
       value -> {:reply, :ok, put_in(state, [:switches, switch_name], not value)}
     end
   end
 
+  def handle_call({:switch_state, switch_name}, _from, state) do
+    :timer.sleep(2000)
+
+    case Map.get(state.switches, switch_name) do
+      nil -> {:reply, :error, state}
+      value -> {:reply, {:ok, value}, state}
+    end
+  end
+
   def handle_call(:laundry_start, _from, state) do
+    :timer.sleep(2000)
     Process.send_after(self(), :laundry_tick, @laundry_tick_time)
 
     {
@@ -81,10 +101,12 @@ defmodule SmartHome.StateServer do
   end
 
   def handle_call(:laundry_stop, _from, %{washing_machine: %{status: :stop, progress: _}} = state) do
+    :timer.sleep(2000)
     {:reply, :ok, state}
   end
 
   def handle_call(:laundry_stop, _from, %{washing_machine: %{status: :idle, progress: _}} = state) do
+    :timer.sleep(2000)
     {:reply, :ok, state}
   end
 
@@ -93,6 +115,8 @@ defmodule SmartHome.StateServer do
         _from,
         %{washing_machine: %{status: :in_progress, progress: _}} = state
       ) do
+    :timer.sleep(2000)
+
     {
       :reply,
       :ok,

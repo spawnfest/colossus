@@ -1,4 +1,6 @@
 defmodule Colossus do
+  use Colossus.IO
+
   defmacro __using__(opts \\ []) do
     quote do
       import Colossus.DSL

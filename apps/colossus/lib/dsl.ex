@@ -42,7 +42,7 @@ defmodule Colossus.DSL do
   defmacro __before_compile__(_env) do
     quote do
       def run([]) do
-        Colossus.IO.puts(help)
+        Colossus.puts(help)
       end
 
       def run(message, adapter, output \\ nil) do
@@ -93,7 +93,7 @@ defmodule Colossus.DSL do
             end
           end)
 
-        Colossus.IO.puts(@help_command_encoder.({key, action.description, options_desc}))
+        Colossus.puts(@help_command_encoder.({key, action.description, options_desc}))
       end
 
       def execute([action | args], options \\ %{}) do
