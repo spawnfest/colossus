@@ -7,6 +7,8 @@ defmodule Colossus do
       import Colossus.DSL
       import Colossus.Encoder
       Module.register_attribute(__MODULE__, :desc, [])
+      Module.register_attribute(__MODULE__, :argument, [])
+      Module.register_attribute(__MODULE__, :long_desc, [])
       Module.register_attribute(__MODULE__, :option, accumulate: true)
       Module.register_attribute(__MODULE__, :module_option, accumulate: true)
       Module.register_attribute(__MODULE__, :actions, accumulate: true)

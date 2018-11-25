@@ -4,11 +4,13 @@ defmodule Colossus.DSL do
   def __on_definition__(env, :def, name, args, _guards, _body) do
     desc = Module.get_attribute(env.module, :desc)
     options = Module.get_attribute(env.module, :option)
+    argument = Module.get_attribute(env.module, :argument)
+    long_desc = Module.get_attribute(env.module, :long_desc)
 
     Module.put_attribute(
       env.module,
       :actions,
-      {name, %{description: desc, options: options, arity: elem(env.function, 1)}}
+      {name, %{arguments: argument, description: desc, options: options, arity: elem(env.function, 1), long_desc: long_desc}}
     )
 
     Module.delete_attribute(env.module, :desc)
@@ -19,9 +21,16 @@ defmodule Colossus.DSL do
   end
 
   @doc "Describes action"
-  defmacro desc(text) do
+  defmacro desc(args, text) do
     quote do
+      @argument unquote(args)
       @desc unquote(text)
+    end
+  end
+
+  defmacro long_desc(text) do
+    quote do
+      @long_desc unquote(text)
     end
   end
 
@@ -104,7 +113,7 @@ defmodule Colossus.DSL do
               end
             end)
 
-          puts(@help_command_encoder.({key, action.description, options_desc}))
+          puts(@help_command_encoder.({key, action.long_desc || action.description, options_desc}))
         rescue 
         UndefinedFunctionError ->
             puts("No such function")
