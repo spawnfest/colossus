@@ -35,31 +35,36 @@ defmodule Colossus.DSL do
   defmacro __before_compile__(_env) do
     quote do
       def run([]) do
-        help
+        Colossus.IO.puts(help)
       end
 
-      def run(message, output \\ nil) do
-        [action_name | opts]= args = OptionParser.split(message)
+      def run(message, adapter, output \\ nil) do
+        [action_name | opts] =
+          args =
+          message
+          |> adapter.parse
+          |> OptionParser.split()
 
         aliases = get_action_config(action_name).options |> get_aliases
 
         cmd =
           args
           |> OptionParser.parse!(aliases: aliases)
-          |> Tuple.to_list
-          |> Enum.reverse
-          |> List.update_at(1, & Enum.into(&1, %{}))
+          |> Tuple.to_list()
+          |> Enum.reverse()
+          |> List.update_at(1, &Enum.into(&1, %{}))
 
+        Process.put(Colossus.IO, output)
         apply(&execute/2, cmd)
       end
 
-
       def help do
-        commands = for {action, %{description: desc}} <- not_propiretary_actions do
-          {action, desc}
-        end
+        commands =
+          for {action, %{description: desc}} <- not_propiretary_actions do
+            {action, desc}
+          end
 
-        @help_encoder.(commands)
+        Colossus.IO.puts(@help_encoder.(commands))
       end
 
       def help(action_key) do
@@ -77,8 +82,7 @@ defmodule Colossus.DSL do
             end
           end)
 
-
-        @help_command_encoder.({key, action.description, options_desc})
+        Colossus.IO.puts(@help_command_encoder.({key, action.description, options_desc}))
       end
 
       def execute([action | args], options \\ %{}) do
@@ -102,10 +106,10 @@ defmodule Colossus.DSL do
       end
 
       defp get_aliases(func_options) do
-        Enum.map(func_options, fn {k,v} ->
+        Enum.map(func_options, fn {k, v} ->
           {Keyword.get(v, :alias), k}
         end)
-        |> Enum.filter(&(elem(&1, 1)))
+        |> Enum.filter(&elem(&1, 1))
       end
     end
   end

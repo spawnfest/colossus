@@ -53,12 +53,16 @@ defmodule Colossus.Terminal.OutHandler do
           Colossus.Terminal.OutHandler.Data,
           [message | Process.get(Colossus.Terminal.OutHandler.Data, [])]
         )
+
         :ok
+
       :live ->
         "\r#{message}"
         |> String.pad_trailing(elem(:io.columns(), 1))
         |> IO.write()
+
         :ok
+
       _ ->
         IO.puts(message)
         :ok
