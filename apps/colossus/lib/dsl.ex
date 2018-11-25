@@ -4,7 +4,7 @@ defmodule Colossus.DSL do
   """
   alias Colossus.Options
 
-  def __on_definition__(env, :def, name, args, _guards, _body) do
+  def __on_definition__(env, :def, name, _args, _guards, _body) do
     desc = Module.get_attribute(env.module, :desc)
     options = Module.get_attribute(env.module, :option)
     argument = Module.get_attribute(env.module, :argument)
@@ -68,7 +68,7 @@ defmodule Colossus.DSL do
 
         case args do
           ["run" | opts] ->
-            help
+            help()
           [action_name | opts] ->
             if is_action_present?(action_name) do
               aliases = get_action_config(action_name).options |> get_aliases
@@ -118,7 +118,7 @@ defmodule Colossus.DSL do
             end)
 
           puts(@help_command_encoder.({key, action.long_desc || action.description, options_desc}))
-        rescue 
+        rescue
         UndefinedFunctionError ->
             puts("No such function")
         end
@@ -171,7 +171,7 @@ defmodule Colossus.DSL do
         uniq = commands |> Enum.uniq()
         uniq
         |> Enum.filter(fn {key, config} ->
-          is_any_func_with_desc = 
+          is_any_func_with_desc =
             Enum.filter(uniq, fn {k,c} ->
               key == k && c.arity == config.arity && c.description
             end)
