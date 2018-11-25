@@ -39,6 +39,10 @@ defmodule SmartHome.StateServer do
     GenServer.call(__MODULE__, :laundry_stop)
   end
 
+  def laundry_state do
+    GenServer.call(__MODULE__, :laundry_state)
+  end
+
   #############################################################################
   ### Callbacks
   #############################################################################
@@ -125,6 +129,13 @@ defmodule SmartHome.StateServer do
     }
   end
 
+  def handle_call(:laundry_state, _from, state) do
+    case Map.get(state, :washing_machine) do
+      nil -> {:reply, :error, state}
+      value -> {:reply, {:ok, value}, state}
+    end
+  end
+
   def handle_info(:laundry_tick, %{washing_machine: %{status: :stop, progress: _}} = state) do
     {:noreply, state}
   end
@@ -137,7 +148,7 @@ defmodule SmartHome.StateServer do
       :noreply,
       state
       |> put_in([:washing_machine, :progress], 100)
-      |> put_in([:washing_machine, :state], :in_idle)
+      |> put_in([:washing_machine, :state], :idle)
     }
   end
 
