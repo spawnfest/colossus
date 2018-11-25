@@ -155,6 +155,7 @@ defmodule Colossus.DSL do
             k == key && config.description && config.arity == v.arity && is_nil(v.description)
           end)
         end)
+        |> Enum.uniq_by(&(elem(&1,0)))
       end
 
       defp missing_action(message) do
