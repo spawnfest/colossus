@@ -3,6 +3,15 @@ defmodule SmartHome.CLI do
   use Colossus
 
   desc("<operation>  <name>", "turns light on/off")
+  long_desc """
+    Turn ligh on/of
+    <operation> - can be one of "on", "off", "toggle", "show"
+    <name> - is a name of bulb
+    Usage Example:
+    light on bulb1
+    light show bulb1
+    light toggle bulb1
+  """
   def light(operation, name)
 
   def light("on", name) do
@@ -49,6 +58,15 @@ defmodule SmartHome.CLI do
   end
 
   desc "<operation>", "performs operations with laundry"
+  desc("<operation>  <name>", "turns light on/off")
+  long_desc """
+  Turn ligh on/of
+  <operation> - can be one of "start", "stop", "status", "watch"
+  Usage Example:
+  light on bulb1
+  light show bulb1
+  light toggle bulb1
+  """
   def laundry("start") do
     Colossus.live()
     Colossus.puts("Starting laundry...")

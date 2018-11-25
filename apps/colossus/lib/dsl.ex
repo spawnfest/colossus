@@ -164,14 +164,18 @@ defmodule Colossus.DSL do
       end
 
       defp compress_commands_for_help(commands) do
-        commands
-        |> Enum.uniq()
+        uniq = commands |> Enum.uniq()
+        uniq
         |> Enum.filter(fn {key, config} ->
-          Enum.find(commands, fn {k, v} ->
-            k == key && config.arity == v.arity && is_nil(v.description)
-          end)
+          is_any_func_with_desc = 
+            Enum.filter(uniq, fn {k,c} ->
+              key == k && c.arity == config.arity && c.description
+            end)
+            |> length
+            |> Kernel.>(0)
+
+          is_any_func_with_desc && !is_nil(config.description) || !is_any_func_with_desc
         end)
-        |> Enum.uniq_by(&(elem(&1,0)))
       end
 
       defp missing_action(message) do
