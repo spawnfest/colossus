@@ -49,7 +49,7 @@ You can find detailed instructions and discription inside these projects.
 
 Main result of this project - is **Module** generated using **Colossus** framework. It can be found insid `smart_home` showcase project:
 
-> ./apps/smart_home/lib/cli.ex
+> ./apps/smart_home/lib/smart_home/cli.ex
 
 You can start from there to understand the main purpose of the framework.
 
