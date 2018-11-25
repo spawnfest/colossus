@@ -1,5 +1,4 @@
 defmodule SmartHome.CLI do
-  # Echo CLI
   use Colossus
 
   desc("<operation>  <name>", "turns light on/off")
